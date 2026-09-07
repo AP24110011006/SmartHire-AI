@@ -38,7 +38,7 @@ def predict_resume(text):
 
     probabilities = model.predict_proba(vector)[0]
 
-    confidence = max(probabilities) * 100
+    confidence = min(100.0, max(0.0, float(max(probabilities) * 100)))
 
     return category, confidence
 

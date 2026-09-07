@@ -80,7 +80,7 @@ def predict_category(text):
 
     probabilities = classifier.predict_proba(vector)[0]
 
-    confidence = max(probabilities) * 100
+    confidence = min(100.0, max(0.0, float(max(probabilities) * 100)))
 
     category = label_encoder.inverse_transform([prediction])[0]
 
@@ -240,7 +240,6 @@ def predict():
             recommendations
 
        )
-        print("Career Insights:", career_insights)
 
 
 
@@ -395,12 +394,14 @@ def health():
 
 if __name__ == "__main__":
 
+    port = int(os.environ.get("PORT", 5000))
+
     app.run(
 
         host="0.0.0.0",
 
-        port=5000,
+        port=port,
 
-        debug=True
+        debug=False
 
     )

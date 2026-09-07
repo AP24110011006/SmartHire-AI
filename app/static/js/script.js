@@ -358,7 +358,7 @@ function updateScores(data){
 
     animateScore(
         confidenceCircle,
-        Math.round(data.confidence*10)
+        Math.round(data.confidence)
     );
 
 }
@@ -368,7 +368,18 @@ function animateScore(element,target){
 
     let current=0;
 
-    target=Math.round(target);
+    target = Math.min(100, Math.max(0, Math.round(Number(target) || 0)));
+
+    if (target === 0) {
+        element.textContent = "0%";
+        element.style.background =
+        `radial-gradient(#1E293B 60%,transparent 61%),
+        conic-gradient(
+        #EF4444 0deg,
+        rgba(255,255,255,.08) 0deg
+        )`;
+        return;
+    }
 
     const timer=setInterval(()=>{
 

@@ -9,13 +9,17 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-# Models
-*.pkl
-
 # Data
 data/raw/
 data/interim/
 data/processed/
+
+# Generated Uploads and Reports
+app/uploads/*
+!app/uploads/.gitkeep
+app/reports/*.pdf
+!app/reports/Shreyank_Gautam_Resume*.pdf
+!app/reports/.gitkeep
 
 # VS Code
 .vscode/

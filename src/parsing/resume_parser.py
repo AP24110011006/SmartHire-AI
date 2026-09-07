@@ -1,14 +1,19 @@
+import os
+import sys
 from pathlib import Path
 import pdfplumber
 from docx import Document
 import pytesseract
 from pdf2image import convert_from_path
 
-# Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Tesseract executable (Windows fallback)
+windows_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+if sys.platform.startswith("win") and os.path.exists(windows_tesseract):
+    pytesseract.pytesseract.tesseract_cmd = windows_tesseract
 
-# Poppler bin folder
-POPPLER_PATH = r"C:\poppler\poppler-26.02.0\Library\bin"
+# Poppler bin folder (Windows fallback)
+windows_poppler = r"C:\poppler\poppler-26.02.0\Library\bin"
+POPPLER_PATH = windows_poppler if (sys.platform.startswith("win") and os.path.exists(windows_poppler)) else None
 
 
 def extract_text(file_path):
@@ -60,14 +65,21 @@ def extract_pdf_ocr(file_path):
 
     text = ""
 
-    images = convert_from_path(
-        file_path,
-        poppler_path=POPPLER_PATH
-    )
+    try:
+        kwargs = {}
+        if POPPLER_PATH and os.path.exists(POPPLER_PATH):
+            kwargs["poppler_path"] = POPPLER_PATH
 
-    for image in images:
+        images = convert_from_path(
+            file_path,
+            **kwargs
+        )
 
-        text += pytesseract.image_to_string(image)
+        for image in images:
+            text += pytesseract.image_to_string(image)
+
+    except Exception as e:
+        print(f"OCR warning: {e}")
 
     return text
 

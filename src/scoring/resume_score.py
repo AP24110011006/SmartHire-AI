@@ -147,6 +147,8 @@ def calculate_resume_score(text, analysis):
 
     details["Resume Length"] = length_score
 
+    score = min(100, max(0, score))
+
     return {
 
         "score": score,
