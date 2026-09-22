@@ -16,6 +16,8 @@ from src.recommendation.recommend_jobs import recommend_jobs
 from src.suggestions.suggestions import generate_resume_suggestions
 from src.reports.pdf_report import generate_pdf_report
 from src.career.career_insights import generate_career_insights
+from src.data.preprocess import clean_text
+from src.scoring.confidence import calculate_calibrated_confidence
 
 
 # ==========================================================
@@ -74,13 +76,15 @@ def allowed_file(filename):
 
 def predict_category(text):
 
-    vector = vectorizer.transform([text])
+    cleaned = clean_text(text)
+
+    vector = vectorizer.transform([cleaned])
 
     prediction = classifier.predict(vector)[0]
 
     probabilities = classifier.predict_proba(vector)[0]
 
-    confidence = min(100.0, max(0.0, float(max(probabilities) * 100)))
+    confidence = calculate_calibrated_confidence(probabilities, text)
 
     category = label_encoder.inverse_transform([prediction])[0]
 

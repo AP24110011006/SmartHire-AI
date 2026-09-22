@@ -10,6 +10,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 import joblib
 
 from src.data.preprocess import clean_text
+from src.scoring.confidence import calculate_calibrated_confidence
 
 
 # -----------------------------------------------------
@@ -38,7 +39,7 @@ def predict_resume(text):
 
     probabilities = model.predict_proba(vector)[0]
 
-    confidence = min(100.0, max(0.0, float(max(probabilities) * 100)))
+    confidence = calculate_calibrated_confidence(probabilities, text)
 
     return category, confidence
 

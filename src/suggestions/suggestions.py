@@ -22,17 +22,17 @@ class ResumeSuggestionEngine:
 
         suggestions = []
 
-        if not analysis.get("name"):
+        if not analysis.get("name") or analysis.get("name") == "Not Found":
             suggestions.append(
                 "Add your full name at the top of the resume."
             )
 
-        if not analysis.get("email"):
+        if not analysis.get("email") or analysis.get("email") == "Not Found":
             suggestions.append(
                 "Include a professional email address."
             )
 
-        if not analysis.get("phone"):
+        if not analysis.get("phone") or analysis.get("phone") == "Not Found":
             suggestions.append(
                 "Add your contact number."
             )
